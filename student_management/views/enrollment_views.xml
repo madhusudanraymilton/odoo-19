@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_enrollment_form" model="ir.ui.view">
+            <field name="name">student.enrollment.form</field>
+            <field name="model">student.enrollment</field>
+            <field name="arch" type="xml">
+                <form string="enrollment">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="marks"/>
+                            <field name="className"/>
+                            <field name="grade"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_enrollment_list" model="ir.ui.view">
+            <field name="name">student.enrollment.list</field>
+            <field name="model">student.enrollment</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="marks"/>
+                    <field name="grade"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>
