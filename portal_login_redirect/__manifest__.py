@@ -7,10 +7,18 @@ Automatically redirect portal users to /my after successful login.
 """,
     'author': 'Madhusudan Ray',
     'category': 'Website',
-    'depends': ['web', 'portal', 'website'],
+    'depends': [
+        'web',
+        'base',
+        'website',
+        'portal',
+    ],
     'data': [
         # we don't need XML for redirect, but keeping folder for future
+        'views/dashboard_templates.xml',
     ],
+    'demo': [],
     'installable': True,
-    'application': False,
+    'application': True,
+    'license': 'LGPL-3',
 }

@@ -1,13 +1,20 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.home import Home
+from odoo.addons.portal.controllers.portal import CustomerPortal
+import logging
 
-class CustomPortalDashboard(http.Controller):
+_logger = logging.getLogger(__name__)
+
+class PortalLoginRedirectController(http.Controller):
 
     @http.route('/my-portal', type='http', auth='user', website=True)
     def portal_dashboard(self, **kw):
-        """ Custom Portal Dashboard """
-        return request.render('portal_login_redirect.portal_dashboard_template')
+        print("##################################Portal Login Redirect is Activated ###############################")
+        user = request.env.user
+        return request.render('portal_login_redirect.portal_dashboard', {
+            'user': user,
+        })
 
 class PortalRedirect(Home):
 
@@ -21,7 +28,19 @@ class PortalRedirect(Home):
 
         # Portal users → go to portal dashboard (/my)
         if user.has_group("base.group_portal"):
+            print("This section is Activated....................................portal redirect class")
             return "/my-portal"
 
         # Default behavior for other cases
         return super()._login_redirect(uid, redirect)
+
+
+class MasterPortalRedirect(CustomerPortal):
+    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
+    def home(self, **kw):
+        """Override portal home - this should take precedence"""
+        _logger.info(f"MASTER REDIRECT: Portal home override for user {request.env.user.id}")
+        print("############################################MASTER REDIRECT#######################################################################")
+        return request.redirect('/my-portal')
+
+
