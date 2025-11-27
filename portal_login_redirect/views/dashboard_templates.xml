@@ -1,0 +1,50 @@
+<odoo>
+    <template id="portal_dashboard_template" name="Custom Portal Dashboard">
+        <t t-call="portal.layout">
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Welcome, <t t-esc="user.name"/> 👋</h2>
+                        <p>Your Portal Dashboard</p>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Profile Card -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm p-3">
+                            <h4>Your Info</h4>
+                            <p><strong>Name:</strong> <t t-esc="user.name"/></p>
+                            <p><strong>Email:</strong> <t t-esc="user.email"/></p>
+                            <p><strong>Phone:</strong> <t t-esc="partner.phone or '-'"/></p>
+                        </div>
+                    </div>
+
+                    <!-- Custom Actions -->
+                    <div class="col-md-8">
+                        <div class="card shadow-sm p-3">
+                            <h4>Quick Actions</h4>
+
+                            <div class="list-group">
+                                <a href="/my/account" class="list-group-item list-group-item-action">
+                                    View My Account
+                                </a>
+                                <a href="/my/orders" class="list-group-item list-group-item-action">
+                                    My Orders
+                                </a>
+                                <a href="/my/tickets" class="list-group-item list-group-item-action">
+                                    Support Tickets
+                                </a>
+                                <a href="/web/session/logout" class="list-group-item list-group-item-action text-danger">
+                                    Logout
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </template>
+</odoo>
