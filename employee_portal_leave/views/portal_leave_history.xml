@@ -2,29 +2,238 @@
     <template id="portal_leave_history" name="Leave History">
         <t t-call="portal.portal_layout">
             <div class="container mt-4">
-                <h3>Your Leave History</h3>
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="mb-0">Leave History</h3>
+                            <a href="/my/leave/apply" class="btn btn-primary">
+                                <i class="fa fa-plus"/> Apply for Leave
+                            </a>
+                        </div>
 
-                <table class="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>Leave Type</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="leaves" t-as="lv">
-                            <tr>
-                                <td><t t-esc="lv.holiday_status_id.name"/></td>
-                                <td><t t-esc="lv.request_date_from"/></td>
-                                <td><t t-esc="lv.request_date_to"/></td>
-                                <td><t t-esc="lv.state"/></td>
-                            </tr>
+                        <!-- Success Message -->
+                        <t t-if="success">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fa fa-check-circle"/> <t t-esc="success"/>
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <span>×</span>
+                                </button>
+                            </div>
                         </t>
-                    </tbody>
-                </table>
 
+                        <!-- Statistics Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-center border-primary">
+                                    <div class="card-body">
+                                        <h2 class="text-primary mb-0" t-esc="stats['total']"/>
+                                        <p class="text-muted mb-0">Total Requests</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-warning">
+                                    <div class="card-body">
+                                        <h2 class="text-warning mb-0" t-esc="stats['pending']"/>
+                                        <p class="text-muted mb-0">Pending</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-success">
+                                    <div class="card-body">
+                                        <h2 class="text-success mb-0" t-esc="stats['approved']"/>
+                                        <p class="text-muted mb-0">Approved</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-danger">
+                                    <div class="card-body">
+                                        <h2 class="text-danger mb-0" t-esc="stats['refused']"/>
+                                        <p class="text-muted mb-0">Rejected</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Options -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <form method="get" class="form-inline">
+                                    <label class="mr-2">Filter by Status:</label>
+                                    <select name="status" class="form-control mr-2" onchange="this.form.submit()">
+                                        <option value="">All</option>
+                                        <option value="draft" t-att-selected="'selected' if status_filter == 'draft' else None">Draft</option>
+                                        <option value="confirm" t-att-selected="'selected' if status_filter == 'confirm' else None">To Approve</option>
+                                        <option value="validate" t-att-selected="'selected' if status_filter == 'validate' else None">Approved</option>
+                                        <option value="refuse" t-att-selected="'selected' if status_filter == 'refuse' else None">Refused</option>
+                                    </select>
+                                    <t t-if="status_filter">
+                                        <a href="/my/leave/history" class="btn btn-sm btn-secondary">Clear Filter</a>
+                                    </t>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Leave Requests Table -->
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Leave Requests</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <t t-if="not leaves">
+                                    <div class="text-center p-5">
+                                        <i class="fa fa-inbox fa-3x text-muted mb-3"/>
+                                        <p class="text-muted">No leave requests found</p>
+                                        <a href="/my/leave/apply" class="btn btn-primary">Apply for Leave</a>
+                                    </div>
+                                </t>
+
+                                <t t-if="leaves">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Leave Type</th>
+                                                    <th>From Date</th>
+                                                    <th>To Date</th>
+                                                    <th>Days</th>
+                                                    <th>Status</th>
+                                                    <th>Delegate</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="leaves" t-as="lv">
+                                                    <tr>
+                                                        <td>
+                                                            <strong t-esc="lv.holiday_status_id.name"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="lv.request_date_from.strftime('%d %b %Y')"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="lv.request_date_to.strftime('%d %b %Y')"/>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge badge-info" t-esc="lv.number_of_days"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="lv.state == 'draft'">
+                                                                <span class="badge badge-secondary">Draft</span>
+                                                            </t>
+                                                            <t t-elif="lv.state == 'confirm'">
+                                                                <span class="badge badge-warning">To Approve</span>
+                                                            </t>
+                                                            <t t-elif="lv.state == 'validate'">
+                                                                <span class="badge badge-success">Approved</span>
+                                                            </t>
+                                                            <t t-elif="lv.state == 'refuse'">
+                                                                <span class="badge badge-danger">Refused</span>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span class="badge badge-secondary" t-esc="lv.state"/>
+                                                            </t>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="lv.delegate_employee_id">
+                                                                <span class="text-muted" t-esc="lv.delegate_employee_id.name"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span class="text-muted">-</span>
+                                                            </t>
+                                                        </td>
+                                                        <td>
+                                                            <!-- View Details Button -->
+                                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" t-att-data-target="'#leaveModal' + str(lv.id)">
+                                                                <i class="fa fa-eye"/> View
+                                                            </button>
+
+                                                            <!-- Cancel Button (only for draft/confirm) -->
+                                                            <t t-if="lv.state in ['draft', 'confirm']">
+                                                                <a t-attf-href="/my/leave/cancel/#{lv.id}"
+                                                                   class="btn btn-sm btn-danger ml-1"
+                                                                   onclick="return confirm('Are you sure you want to cancel this leave request?')">
+                                                                    <i class="fa fa-times"/> Cancel
+                                                                </a>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+
+                                                    <!-- Modal for Leave Details -->
+                                                    <div class="modal fade" t-att-id="'leaveModal' + str(lv.id)" tabindex="-1" role="dialog">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Leave Request Details</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal">
+                                                                        <span>×</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <dl class="row">
+                                                                        <dt class="col-sm-4">Leave Type:</dt>
+                                                                        <dd class="col-sm-8" t-esc="lv.holiday_status_id.name"/>
+
+                                                                        <dt class="col-sm-4">From Date:</dt>
+                                                                        <dd class="col-sm-8" t-esc="lv.request_date_from"/>
+
+                                                                        <dt class="col-sm-4">To Date:</dt>
+                                                                        <dd class="col-sm-8" t-esc="lv.request_date_to"/>
+
+                                                                        <dt class="col-sm-4">Number of Days:</dt>
+                                                                        <dd class="col-sm-8" t-esc="lv.number_of_days"/>
+
+                                                                        <dt class="col-sm-4">Status:</dt>
+                                                                        <dd class="col-sm-8">
+                                                                            <t t-if="lv.state == 'draft'">Draft</t>
+                                                                            <t t-elif="lv.state == 'confirm'">To Approve</t>
+                                                                            <t t-elif="lv.state == 'validate'">Approved</t>
+                                                                            <t t-elif="lv.state == 'refuse'">Refused</t>
+                                                                            <t t-else="" t-esc="lv.state"/>
+                                                                        </dd>
+
+                                                                        <t t-if="lv.delegate_employee_id">
+                                                                            <dt class="col-sm-4">Delegated To:</dt>
+                                                                            <dd class="col-sm-8" t-esc="lv.delegate_employee_id.name"/>
+                                                                        </t>
+
+                                                                        <dt class="col-sm-4">Reason:</dt>
+                                                                        <dd class="col-sm-8" t-esc="lv.name"/>
+                                                                    </dl>
+
+                                                                    <!-- Attachments -->
+                                                                    <t t-set="attachments" t-value="lv.attachment_ids"/>
+                                                                    <t t-if="attachments">
+                                                                        <hr/>
+                                                                        <h6>Attachments:</h6>
+                                                                        <ul class="list-unstyled">
+                                                                            <t t-foreach="attachments" t-as="att">
+                                                                                <li>
+                                                                                    <a t-attf-href="/web/content/#{att.id}?download=true" target="_blank">
+                                                                                        <i class="fa fa-paperclip"/> <t t-esc="att.name"/>
+                                                                                    </a>
+                                                                                </li>
+                                                                            </t>
+                                                                        </ul>
+                                                                    </t>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </t>
     </template>
