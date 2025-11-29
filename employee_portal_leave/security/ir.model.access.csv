@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+portal_leave_access,portal_leave_access,hr_holidays.model_hr_leave,base.group_portal,1,0,0,0
+portal_leave_type_access,portal_leave_type_access,hr_holidays.model_hr_leave_type,base.group_portal,1,0,0,0
+portal_employee_access,portal_employee_access,hr.model_hr_employee,base.group_portal,1,0,0,0

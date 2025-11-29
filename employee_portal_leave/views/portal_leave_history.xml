@@ -1,0 +1,31 @@
+<odoo>
+    <template id="portal_leave_history" name="Leave History">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h3>Your Leave History</h3>
+
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Leave Type</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="leaves" t-as="lv">
+                            <tr>
+                                <td><t t-esc="lv.holiday_status_id.name"/></td>
+                                <td><t t-esc="lv.request_date_from"/></td>
+                                <td><t t-esc="lv.request_date_to"/></td>
+                                <td><t t-esc="lv.state"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+            </div>
+        </t>
+    </template>
+</odoo>

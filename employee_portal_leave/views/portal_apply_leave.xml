@@ -1,0 +1,104 @@
+<!--
+<odoo>
+    <template id="portal_apply_leave" name="Apply Leave">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h3>Apply for Leave</h3>
+
+                <form action="/my/leave/submit" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="form-group mt-3">
+                        <label>Leave Type</label>
+                        <select name="leave_type" class="form-control" required="1">
+                            <t t-foreach="leave_types" t-as="lt">
+                                <option t-att-value="lt.id"><t t-esc="lt.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>From Date</label>
+                        <input type="date" name="date_from" class="form-control" required="1"/>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>To Date</label>
+                        <input type="date" name="date_to" class="form-control" required="1"/>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>Reason</label>
+                        <textarea name="reason" class="form-control" required="1"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>
+
+-->
+
+<odoo>
+    <template id="portal_apply_leave" name="Apply Leave">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h3>Apply for Leave</h3>
+
+                <form action="/my/leave/submit" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="form-group mt-3">
+                        <label>Leave Type</label>
+                        <select name="leave_type" class="form-control" required="1">
+                            <t t-foreach="leave_types" t-as="lt">
+                                <option t-att-value="lt.id"><t t-esc="lt.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>From Date</label>
+                        <input type="date" name="date_from" class="form-control" required="1"/>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>To Date</label>
+                        <input type="date" name="date_to" class="form-control" required="1"/>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label>Reason</label>
+                        <textarea name="reason" class="form-control" required="1"></textarea>
+                    </div>
+
+                    <!-- Delegation Fields -->
+                    <div class="form-group mt-3">
+                        <label>Delegate To (Employee)</label>
+                        <select name="delegate_employee_id" class="form-control">
+                            <option value="">-- Select Employee --</option>
+                            <t t-foreach="employees" t-as="emp">
+                                <option t-att-value="emp.id"><t t-esc="emp.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+<!--
+                    <div class="form-group mt-3">
+                        <label>Batch ID</label>
+                        <input type="text" name="batch_id" class="form-control" placeholder="Enter Batch ID"/>
+                    </div>
+-->
+
+                    <!-- Attachment Field -->
+                    <div class="form-group mt-3">
+                        <label>Attachment</label>
+                        <input type="file" name="attachment" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"/>
+                        <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, JPG, JPEG, PNG</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>
